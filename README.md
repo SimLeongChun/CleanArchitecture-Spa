@@ -16,9 +16,9 @@ If you find this project useful, please give it a star. Thanks! ⭐
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
-- [Node.js](https://nodejs.org/) (LTS) — only required if you plan to use the Angular or React frontend
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/) (or any OCI-compliant container runtime) — only required when using SQL Server or PostgreSQL. Not required when using SQLite (the default).
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later ([.NET 11.0 SDK](https://dotnet.microsoft.com/download/dotnet/11.0) or later to target .NET 11)
+- [Node.js](https://nodejs.org/) (LTS), only required if you plan to use the Angular or React frontend
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/) (or any OCI-compliant container runtime), only required when using SQL Server or PostgreSQL. Not required when using SQLite (the default).
 
 ### Install the template
 
@@ -28,14 +28,15 @@ dotnet new install Clean.Architecture.Solution.Template
 
 ### Create a new solution
 
-Create a new solution using the template. Specify the client framework using `--client-framework` (`-cf`) and the database provider using `--database` (`-db`):
+Create a new solution using the template. Specify the target framework using `--framework` (`-f`), the client framework using `--client-framework` (`-cf`) and the database provider using `--database` (`-db`):
 
 ```bash
-dotnet new ca-sln --client-framework [angular|react|none] --database [postgresql|sqlite|sqlserver] --output YourProjectName
+dotnet new ca-sln --framework [net10.0|net11.0] --client-framework [angular|react|none] --database [postgresql|sqlite|sqlserver] --output YourProjectName
 ```
 
 | Option | Values | Default |
 |---|---|---|
+| `--framework` | `net10.0`, `net11.0` | `net10.0` |
 | `--client-framework` | `angular`, `react`, `none` | `angular` |
 | `--database` | `postgresql`, `sqlite`, `sqlserver` | `sqlite` |
 
@@ -56,6 +57,11 @@ dotnet new ca-sln -cf react -db sqlserver -o YourProjectName
 dotnet new ca-sln -cf none -db sqlite -o YourProjectName
 ```
 
+🆕 Angular SPA on .NET 11 with SQL Server:
+```bash
+dotnet new ca-sln -f net11.0 -cf angular -db sqlserver -o YourProjectName
+```
+
 > 💡 **Tip:** Run `dotnet new ca-sln --help` to see all available template options.
 
 ### Run the app
@@ -69,19 +75,21 @@ aspire run
 Or using the .NET CLI:
 
 ```bash
-dotnet run --project .\src\AppHost
+dotnet run --project ./src/AppHost
 ```
 
 The Aspire dashboard will open automatically, showing the application URLs and logs.
+
+Generated solutions also include a [Dev Container](https://containers.dev/) with the .NET SDK, the Aspire CLI, Docker and (for Angular or React) Node.js, so you can open them in VS Code with **Reopen in Container** or in GitHub Codespaces.
 
 To learn more, see the [Getting started](https://cleanarchitecture.jasontaylor.dev/docs/getting-started/) guide and [Architecture](https://cleanarchitecture.jasontaylor.dev/docs/architecture/) overview.
 
 ## Technologies
 
-* [ASP.NET Core 10](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
+* [ASP.NET Core 10 or 11](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
 * [Aspire](https://aspire.dev)
-* [Entity Framework Core 10](https://docs.microsoft.com/en-us/ef/core/)
-* [Angular 21](https://angular.dev/) or [React 19](https://react.dev/)
+* [Entity Framework Core 10 or 11](https://docs.microsoft.com/en-us/ef/core/)
+* [Angular 22](https://angular.dev/) or [React 19](https://react.dev/)
 * [MediatR](https://github.com/jbogard/MediatR)
 * [AutoMapper](https://automapper.org/)
 * [FluentValidation](https://fluentvalidation.net/)
@@ -90,7 +98,7 @@ To learn more, see the [Getting started](https://cleanarchitecture.jasontaylor.d
 
 ## Versions
 
-The `main` branch is on **.NET 10.0**. Previous versions are available:
+The `main` branch supports **.NET 10.0** (LTS, the default) and **.NET 11.0** (STS); choose with `--framework`. Both are supported until November 2028. .NET 11 with PostgreSQL uses a release candidate of the Npgsql EF Core provider until its 11.0 release. Previous versions are available:
 
 | Version | Branch |
 |---|---|

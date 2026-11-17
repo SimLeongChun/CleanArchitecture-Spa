@@ -225,6 +225,69 @@
         "value": "https://cleanarchitecture.jasontaylor.dev"
       }
     },
+    "Framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net10.0",
+          "description": "Target .NET 10 (LTS)"
+        },
+        {
+          "choice": "net11.0",
+          "description": "Target .NET 11 (STS)"
+        }
+      ],
+      "replaces": "net10.0",
+      "defaultValue": "net10.0",
+      "description": "The target framework for the solution."
+    },
+    "UseNet10": {
+      "type": "computed",
+      "value": "(Framework == \"net10.0\")"
+    },
+    "UseNet11": {
+      "type": "computed",
+      "value": "(Framework == \"net11.0\")"
+    },
+    "SdkVersion": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "10.0.100",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          {
+            "condition": "(Framework == \"net11.0\")",
+            "value": "11.0.100"
+          },
+          {
+            "condition": "",
+            "value": "10.0.100"
+          }
+        ]
+      }
+    },
+    "NswagRuntime": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "Net100",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          {
+            "condition": "(Framework == \"net11.0\")",
+            "value": "Net110"
+          },
+          {
+            "condition": "",
+            "value": "Net100"
+          }
+        ]
+      }
+    },
     "ClientFramework": {
       "type": "parameter",
       "datatype": "choice",
@@ -305,15 +368,7 @@
         "src/Web/appsettings.json",
         "src/Web/appsettings.PostgreSQL.json",
         "src/Web/appsettings.SQLite.json",
-        "src/Web/appsettings.SQLServer.json",
-        "tests/Application.FunctionalTests/PostgreSQLTestcontainersTestDatabase.cs",
-        "tests/Application.FunctionalTests/PostgreSQLTestDatabase.cs",
-        "tests/Application.FunctionalTests/SqliteTestDatabase.cs",
-        "tests/Application.FunctionalTests/SqlTestcontainersTestDatabase.cs",
-        "tests/Application.FunctionalTests/SqlTestDatabase.cs",
-        "tests/Application.FunctionalTests/appsettings.json",
-        "tests/Application.FunctionalTests/appsettings.PostgreSQL.json",
-        "tests/Application.FunctionalTests/appsettings.SQLServer.json"
+        "src/Web/appsettings.SQLServer.json"
       ],
       "rename": {
         "README-template.md": "README.md"
@@ -356,36 +411,39 @@
           }
         },
         {
+          "condition": "(UseNet10)",
+          "exclude": [
+            "Directory.Packages.net11.0.props"
+          ]
+        },
+        {
+          "condition": "(UseNet11)",
+          "exclude": [
+            "Directory.Packages.net10.0.props"
+          ]
+        },
+        {
           "condition": "(UsePostgreSQL)",
           "include": [
-            "src/Web/appsettings.PostgreSQL.json",
-            "tests/Application.FunctionalTests/PostgreSQLTestcontainersTestDatabase.cs",
-            "tests/Application.FunctionalTests/PostgreSQLTestDatabase.cs",
-            "tests/Application.FunctionalTests/appsettings.PostgreSQL.json"
+            "src/Web/appsettings.PostgreSQL.json"
           ],
           "rename": {
-            "src/Web/appsettings.PostgreSQL.json": "src/Web/appsettings.json",
-            "tests/Application.FunctionalTests/appsettings.PostgreSQL.json": "tests/Application.FunctionalTests/appsettings.json"
+            "src/Web/appsettings.PostgreSQL.json": "src/Web/appsettings.json"
           }
         },
         {
           "condition": "(UseSqlServer)",
           "include": [
-            "src/Web/appsettings.SQLServer.json",
-            "tests/Application.FunctionalTests/SqlTestcontainersTestDatabase.cs",
-            "tests/Application.FunctionalTests/SqlTestDatabase.cs",
-            "tests/Application.FunctionalTests/appsettings.SQLServer.json"
+            "src/Web/appsettings.SQLServer.json"
           ],
           "rename": {
-            "src/Web/appsettings.SQLServer.json": "src/Web/appsettings.json",
-            "tests/Application.FunctionalTests/appsettings.SQLServer.json": "tests/Application.FunctionalTests/appsettings.json"
+            "src/Web/appsettings.SQLServer.json": "src/Web/appsettings.json"
           }
         },
         {
           "condition": "(UseSqlite)",
           "include": [
-            "src/Web/appsettings.SQLite.json",
-            "tests/Application.FunctionalTests/SqliteTestDatabase.cs"
+            "src/Web/appsettings.SQLite.json"
           ],
           "rename": {
             "src/Web/appsettings.SQLite.json": "src/Web/appsettings.json"
